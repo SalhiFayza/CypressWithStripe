@@ -1,0 +1,18 @@
+{
+  "name": "stripe-cypress-test-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test": "cypress open",
+    "cypress:run": "cypress run"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "stripe": "^12.0.0"
+  },
+  "devDependencies": {
+    "cypress": "^13.17.0",
+    "cypress-plugin-stripe-elements": "^1.0.2"
+  }
+}

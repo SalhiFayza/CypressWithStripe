@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stripe Elements - Test App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <h1>Stripe Elements — Test Page</h1>
+  <p>Use this page for Cypress + <code>cypress-plugin-stripe-elements</code> testing.</p>
+
+  <script src="https://js.stripe.com/v3/"></script>
+
+  <form id="payment-form">
+    <div class="center-link">
+      <a href="#">Salhi Faiza 💸</a>
+    </div>
+
+    <label>Cardholder Name</label>
+    <input type="text" id="cardholder-name" placeholder="Name on card" />
+    <label>Card</label>
+    <div id="card-element"></div>
+
+    <button id="submit" type="submit">Pay 💰</button>
+  </form>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    const PUBLISHABLE_KEY = (new URLSearchParams(location.search)).get('pk') ||
+      'your Public key on stripe';
+    const stripe = Stripe(PUBLISHABLE_KEY);
+    const elements = stripe.elements();
+    const style = {
+      base: { fontSize: '16px', color: '#333', '::placeholder': { color: '#aaa' } }
+    };
+
+    const card = elements.create('card', { style });
+    card.mount('#card-element');
+
+    async function createPaymentIntent() {
+      const res = await fetch('/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: 1000 })
+      });
+      return res.json();
+    }
+
+    const form = document.getElementById('payment-form');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      result.textContent = 'Creating payment...';
+
+      const { clientSecret } = await createPaymentIntent();
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            name: document.getElementById('cardholder-name').value,
+          }
+        }
+      });
+
+      if (error) {
+        result.textContent = 'Error: ' + error.message;
+      } else {
+        result.innerHTML = '<strong>Success!</strong> PaymentIntent status: '
+          + paymentIntent.status + '<br/><a href="/success.html">Go to success page</a>';
+      }
+    });
+  </script>
+</body>
+
+</html>
