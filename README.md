@@ -48,9 +48,6 @@ npm start
 npm run test
 ```
 <img width="899" height="260" alt="image" src="https://github.com/user-attachments/assets/51335a4a-f307-4bfd-83b1-750e00da6964" />
-<img width="1297" height="728" alt="image" src="https://github.com/user-attachments/assets/f5e796ee-8b02-4173-bbcd-21afc3a76cc3" />
-https://github.com/user-attachments/assets/2b6fb77b-8f81-40bf-898f-759c1c5cdae7
-
 5. **Run tests headlessly (optional):**
 ```bash
 npm run cypress:run
